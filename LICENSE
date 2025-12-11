@@ -1,0 +1,17 @@
+# Licenses
+
+This package contains components under different licenses:
+
+## Multi-Column Layout (`lib/multicolumn/`)
+
+Licensed under [GPL-3.0](lib/multicolumn/LICENSE)
+Copyright (c) 2025 Yash Gupta
+
+## Code Runner (`lib/coderunner/`)
+
+Licensed under [MIT](lib/coderunner/LICENSE)
+Copyright (c) 2025 Harshpreet Singh
+
+---
+
+See individual LICENSE files in each component directory for full license text.
