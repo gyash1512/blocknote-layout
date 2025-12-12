@@ -11,6 +11,7 @@ Layout and utility extensions for [BlockNote](https://www.blocknotejs.org/) - th
 
 - **Multi-Column Layouts** - Notion-style columns with resizable dividers and responsive stacking
 - **Python Code Runner** - Execute Python code in-browser using Pyodide with package support
+- **Slideshow Presentations** - Create and present slides with Reveal.js integration
 
 ---
 
@@ -133,6 +134,66 @@ import type { CodeBlockProps, PythonResult } from "blocknote-layout";
 
 ---
 
+## Slideshow Presentations
+
+Create presentation slides with Reveal.js integration directly in BlockNote.
+
+```tsx
+import { BlockNoteSchema, defaultBlockSpecs } from "@blocknote/core";
+import { BlockNoteView } from "@blocknote/mantine";
+import { useCreateBlockNote } from "@blocknote/react";
+import { withSlideshow, getSlideshowSlashMenuItems } from "blocknote-layout";
+// or: import { withSlideshow } from "blocknote-layout/slideshow";
+
+// Create schema with slideshow support
+const schema = withSlideshow(BlockNoteSchema.create());
+
+function App() {
+  const editor = useCreateBlockNote({ schema });
+
+  return <BlockNoteView editor={editor} />;
+}
+```
+
+### Slideshow Features
+
+- **Reveal.js Integration**: Full-featured presentation mode with transitions
+- **Slide Management**: Create, organize, and present slides within your editor
+- **Auto-conversion**: Convert regular blocks into presentation slides
+- **Presentation Modal**: Immersive fullscreen presentation experience
+
+### Slideshow Exports
+
+```ts
+import {
+  // Schema utilities
+  withSlideshow,
+  createSlideshowSchema,
+  slideshowSchema,
+  slideshowBlockSpecs,
+  checkSlideshowBlocksInSchema,
+  
+  // Block components
+  SlideBlock,
+  SlideshowBlock,
+  
+  // ProseMirror nodes
+  Slide,
+  Slideshow,
+  
+  // Extensions and utilities
+  getSlideshowSlashMenuItems,
+  insertSlideshow,
+  
+  // React components
+  SlideshowNode,
+  SlideNodeView,
+  PresentationModal,
+} from "blocknote-layout";
+```
+
+---
+
 ## Subpath Imports
 
 You can also import from specific subpaths for tree-shaking:
@@ -143,6 +204,9 @@ import { withMultiColumn } from "blocknote-layout/multicolumn";
 
 // Import only code runner
 import { CodeBlock } from "blocknote-layout/coderunner";
+
+// Import only slideshow
+import { withSlideshow } from "blocknote-layout/slideshow";
 ```
 
 ---
@@ -163,13 +227,6 @@ import { CodeBlock } from "blocknote-layout/coderunner";
 ```
 
 ---
-
-## License
-
-This package contains components under different licenses:
-
-- **Multi-Column** (`lib/multicolumn/`): [GPL-3.0](lib/multicolumn/LICENSE) © [Yash Gupta](https://github.com/gyash1512)
-- **Code Runner** (`lib/coderunner/`): [MIT](lib/coderunner/LICENSE) © [Harshpreet Singh](https://github.com/harshpreet-singh)
 
 See the [LICENSE](./LICENSE) file for details.
 
