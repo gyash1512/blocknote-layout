@@ -19,10 +19,12 @@ export {
 export {
     CodeBlock,
     insertCode,
-    runPython,
-    getPyodide,
-    isPyodideLoaded,
-    isPyodideLoading,
+    executeCode as runWithJudge0,
+    setCodeRunnerConfig,
+    getCodeRunnerConfig,
+    isRunnerAvailable,
+    JUDGE0_LANGUAGE_IDS,
 } from "./coderunner/main.js";
 
-export type { CodeBlockProps, PythonResult } from "./coderunner/main.js";
+export type { CodeBlockProps, RunnerResult as Judge0Result, RunnerResult, CodeRunnerConfig } from "./coderunner/main.js";
+
