@@ -1,22 +1,7 @@
 # Licenses
 
-This package contains components under different licenses:
+## Default License: MIT
 
-## Multi-Column Layout (`lib/multicolumn/`)
+This package is primarily licensed under the **MIT License**, except where noted below.
 
-Licensed under [GPL-3.0](lib/multicolumn/LICENSE)
-Copyright (c) 2025 Yash Gupta
-
-## Code Runner (`lib/coderunner/`)
-
-Licensed under [MIT](lib/coderunner/LICENSE)
-Copyright (c) 2025 Harshpreet Singh
-
-## SlideShow (`lib/slideshow`)
-
-Licensed under [MIT](lib/slideshow/LICENSE)
-Copyright (c) 2025 Satvik Batra
-
----
-
-See individual LICENSE files in each component directory for full license text.
+All components use the MIT License **except** the Multi-Column Layout component, which uses GPL-3.0.
