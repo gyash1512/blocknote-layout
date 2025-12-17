@@ -45,6 +45,10 @@
     "./slideshow": {
       "types": "./dist/slideshow/main.d.ts",
       "import": "./dist/slideshow/main.js"
+    },
+    "./spreadsheet": {
+      "types": "./dist/spreadsheet/main.d.ts",
+      "import": "./dist/spreadsheet/main.js"
     }
   },
   "files": [
@@ -80,7 +84,13 @@
     "@codemirror/lang-rust": "^6.0.2",
     "@codemirror/state": "^6.5.2",
     "@codemirror/view": "^6.39.2",
+    "@handsontable/react": "^16.2.0",
+    "echarts": "^6.0.0",
+    "echarts-for-react": "^3.0.5",
+    "handsontable": "^16.2.0",
+    "hyperformula": "^3.1.0",
     "pyodide": "^0.29.0",
+    "recharts": "^3.6.0",
     "reveal.js": "^5.1.0"
   },
   "devDependencies": {

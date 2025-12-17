@@ -1,0 +1,196 @@
+/* Clean minimal styles for the spreadsheet component */
+.spreadsheet-wrapper {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin: 16px 0;
+    width: 100%;
+}
+
+.spreadsheet-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.spreadsheet-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.spreadsheet-title:hover {
+    background: #f0f0f0;
+}
+
+.spreadsheet-title-input {
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+    padding: 4px 8px;
+    border: 2px solid #4a90e2;
+    border-radius: 4px;
+    outline: none;
+    background: white;
+    min-width: 200px;
+}
+
+.spreadsheet-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.spreadsheet-actions button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.spreadsheet-actions button:hover {
+    background: #f5f5f5;
+    border-color: #999;
+}
+
+.spreadsheet-actions button.active {
+    background: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+.spreadsheet-content {
+    overflow: hidden;
+    max-height: 600px;
+}
+
+/* Handsontable container */
+.handsontable-container {
+    width: 100%;
+    overflow: auto;
+    background: white;
+    padding: 16px;
+    max-height: 600px;
+}
+
+/* Mobile responsiveness for table */
+@media (max-width: 768px) {
+    .handsontable-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-height: 400px;
+    }
+}
+
+.react-spreadsheet-container {
+    width: 100%;
+    position: relative;
+}
+
+.chart-empty {
+    padding: 40px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Chart wrapper and controls */
+.spreadsheet-chart-wrapper {
+    width: 100%;
+    padding: 20px;
+}
+
+.chart-controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.chart-controls button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 2px solid #ddd;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+    color: #666;
+}
+
+.chart-controls button:hover {
+    background: #f5f5f5;
+    border-color: #4a90e2;
+    color: #4a90e2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chart-controls button.active {
+    background: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.chart-controls button svg {
+    font-size: 20px;
+}
+
+.spreadsheet-chart-container {
+    width: 100%;
+    min-height: 400px;
+}
+
+/* Mobile responsiveness for charts */
+@media (max-width: 768px) {
+    .spreadsheet-chart-wrapper {
+        padding: 16px;
+    }
+
+    .chart-controls {
+        gap: 8px;
+    }
+
+    .chart-controls button {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    .spreadsheet-chart-container {
+        min-height: 300px;
+    }
+
+    .spreadsheet-toolbar {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .spreadsheet-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}

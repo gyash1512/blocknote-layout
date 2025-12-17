@@ -20,7 +20,13 @@ const externalPackages = [
     "react-icons/md",
     "react-icons/tb",
     "react-icons/vsc",
+    "react-icons/fa",
     "pyodide",
+    "handsontable",
+    "@handsontable/react",
+    "hyperformula",
+    "echarts",
+    "echarts-for-react",
 ];
 
 // https://vitejs.dev/config/
