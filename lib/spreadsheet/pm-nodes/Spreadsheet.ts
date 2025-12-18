@@ -5,7 +5,7 @@ import SpreadsheetNodeView from "../components/SpreadsheetNodeView.js";
 export const Spreadsheet = Node.create({
     name: "spreadsheet",
     group: "blockContent",
-    content: "inline*",
+    content: "",  // Changed from "inline*" to match block spec content: "none"
     draggable: true,
 
     addAttributes() {
@@ -39,6 +39,14 @@ export const Spreadsheet = Node.create({
                     "data-settings": attributes.settings as string,
                 }),
             },
+            // Cell metadata for styling (bold, italic, colors, etc.)
+            meta: {
+                default: "{}",
+                parseHTML: (element) => element.getAttribute("data-meta") || "{}",
+                renderHTML: (attributes) => ({
+                    "data-meta": attributes.meta as string,
+                }),
+            },
         };
     },
 
@@ -55,7 +63,7 @@ export const Spreadsheet = Node.create({
         div.setAttribute('data-content-type', 'spreadsheet');
         return {
             dom: div,
-            contentDOM: undefined,
+            contentDOM: undefined,  // No content DOM since we have no inline content
         };
     },
 

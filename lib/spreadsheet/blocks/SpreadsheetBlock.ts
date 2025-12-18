@@ -5,7 +5,7 @@ export const SpreadsheetBlock = createBlockSpecFromTiptapNode(
     {
         node: Spreadsheet as any,
         type: "spreadsheet",
-        content: "inline",
+        content: "none",  // Changed from "inline" - spreadsheet is self-contained, no inline content needed
     },
     {
         title: {
@@ -18,6 +18,9 @@ export const SpreadsheetBlock = createBlockSpecFromTiptapNode(
             default: "[]",
         },
         settings: {
+            default: "{}",
+        },
+        meta: {
             default: "{}",
         },
     },

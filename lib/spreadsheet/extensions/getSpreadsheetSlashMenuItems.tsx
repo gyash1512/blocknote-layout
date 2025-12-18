@@ -1,10 +1,12 @@
-import { BlockNoteEditor } from "@blocknote/core";
+import { BlockNoteEditor, BlockSchema, InlineContentSchema, StyleSchema } from "@blocknote/core";
 import { DefaultReactSuggestionItem } from "@blocknote/react";
 import { FaTable } from "react-icons/fa";
 
-type AnyBlockNoteEditor = BlockNoteEditor<any, any, any>;
-
-function insertSpreadsheet(editor: AnyBlockNoteEditor): void {
+function insertSpreadsheet<
+    BSchema extends BlockSchema,
+    ISchema extends InlineContentSchema,
+    SSchema extends StyleSchema
+>(editor: BlockNoteEditor<BSchema, ISchema, SSchema>): void {
     // Insert a spreadsheet block
     editor.insertBlocks(
         [
@@ -20,11 +22,19 @@ function insertSpreadsheet(editor: AnyBlockNoteEditor): void {
     );
 }
 
-export function getSpreadsheetSlashMenuItems(
-    editor: AnyBlockNoteEditor,
+export function getSpreadsheetSlashMenuItems<
+    BSchema extends BlockSchema,
+    ISchema extends InlineContentSchema,
+    SSchema extends StyleSchema
+>(
+    editor: BlockNoteEditor<BSchema, ISchema, SSchema>,
 ): DefaultReactSuggestionItem[] {
     // Check if spreadsheet is in schema
-    const checkSpreadsheetBlocksInSchema = (e: AnyBlockNoteEditor): boolean => {
+    const checkSpreadsheetBlocksInSchema = <
+        B extends BlockSchema,
+        I extends InlineContentSchema,
+        S extends StyleSchema
+    >(e: BlockNoteEditor<B, I, S>): boolean => {
         return "spreadsheet" in e.schema.blockSchema;
     };
 
