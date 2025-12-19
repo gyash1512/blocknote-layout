@@ -7,22 +7,22 @@ import {
     InlineContentSchema,
     StyleSchema,
 } from "@blocknote/core";
-import { SpreadsheetBlock } from "./SpreadsheetBlock.js";
+import { WhiteboardBlock } from "./WhiteboardBlock.js";
 
-export const spreadsheetBlockSpecs = {
-    spreadsheet: SpreadsheetBlock,
+export const whiteboardBlockSpecs = {
+    whiteboard: WhiteboardBlock,
 } as const;
 
-export const spreadsheetSchema = BlockNoteSchema.create({
-    blockSpecs: spreadsheetBlockSpecs,
+export const whiteboardSchema = BlockNoteSchema.create({
+    blockSpecs: whiteboardBlockSpecs,
 });
 
-export function createSpreadsheetSchema<T extends BlockSpecs>(
+export function createWhiteboardSchema<T extends BlockSpecs>(
     customBlockSpecs?: T,
 ) {
     const allBlockSpecs = {
         ...defaultBlockSpecs,
-        ...spreadsheetBlockSpecs,
+        ...whiteboardBlockSpecs,
         ...(customBlockSpecs || {}),
     };
 
@@ -31,19 +31,19 @@ export function createSpreadsheetSchema<T extends BlockSpecs>(
     } as Parameters<typeof BlockNoteSchema.create>[0]);
 }
 
-export function withSpreadsheet<
+export function withWhiteboard<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     T extends BlockNoteSchema<any, any, any>
 >(schema: T): T {
     return schema.extend({
-        blockSpecs: spreadsheetBlockSpecs,
+        blockSpecs: whiteboardBlockSpecs,
     }) as T;
 }
 
-export function checkSpreadsheetBlocksInSchema(
+export function checkWhiteboardBlocksInSchema(
     editor: BlockNoteEditor<BlockSchema, InlineContentSchema, StyleSchema>
 ): boolean {
     return (
-        "spreadsheet" in editor.schema.blockSchema
+        "whiteboard" in editor.schema.blockSchema
     );
 }
