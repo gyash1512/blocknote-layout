@@ -2,6 +2,10 @@ import {
   BlockNoteSchema,
   defaultBlockSpecs,
   BlockSpecs,
+  BlockNoteEditor,
+  BlockSchema,
+  InlineContentSchema,
+  StyleSchema,
 } from "@blocknote/core";
 import { SlideBlock, SlideshowBlock } from "./SlideshowBlocks.js";
 
@@ -38,7 +42,7 @@ export function withSlideshow<
 }
 
 export function checkSlideshowBlocksInSchema(
-  editor: any
+  editor: BlockNoteEditor<BlockSchema, InlineContentSchema, StyleSchema>
 ): boolean {
   return (
     "slideshow" in editor.schema.blockSchema &&
