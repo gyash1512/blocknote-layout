@@ -1,11 +1,10 @@
 import { createBlockSpecFromTiptapNode } from "@blocknote/core";
-import { Node } from "@tiptap/core";
 import { Slide } from "../pm-nodes/Slide.js";
 import { Slideshow } from "../pm-nodes/Slideshow.js";
 
 export const SlideBlock = createBlockSpecFromTiptapNode(
   {
-    node: Slide as unknown as Node,
+    node: Slide as any,
     type: "slide",
     content: "none",
   },
@@ -21,7 +20,7 @@ export const SlideBlock = createBlockSpecFromTiptapNode(
 
 export const SlideshowBlock = createBlockSpecFromTiptapNode(
   {
-    node: Slideshow as unknown as Node,
+    node: Slideshow as any,
     type: "slideshow",
     content: "inline",
   },
