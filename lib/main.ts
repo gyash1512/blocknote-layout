@@ -45,3 +45,25 @@ export {
     SlideNodeView,
     PresentationModal,
 } from "./slideshow/main.js";
+
+// Spreadsheet exports
+export {
+    spreadsheetBlockSpecs,
+    getSpreadsheetSlashMenuItems,
+} from "./spreadsheet/main.js";
+
+// Whiteboard exports
+export {
+    Whiteboard,
+    WhiteboardBlock,
+    whiteboardBlockSpecs,
+    createWhiteboardSchema,
+    checkWhiteboardBlocksInSchema,
+    withWhiteboard,
+    whiteboardSchema,
+    getWhiteboardSlashMenuItems,
+    insertWhiteboard,
+    WhiteboardNodeView,
+} from "./whiteboard/main.js";
+
+
