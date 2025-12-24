@@ -7,6 +7,7 @@ import "reveal.js/dist/theme/black.css";
 import "reveal.js/dist/theme/beige.css";
 import "reveal.js/dist/theme/sky.css";
 import "@blocknote/mantine/style.css";
+import "../styles/slideshow.css";
 import { MdClose } from "react-icons/md";
 
 interface PresentationModalProps {
@@ -49,7 +50,7 @@ export const PresentationModal: React.FC<PresentationModalProps> = ({
       // Calculate scale factors for both dimensions
       const scaleY = contentHeight > availableHeight ? availableHeight / contentHeight : 1;
       const scaleX = contentWidth > availableWidth ? availableWidth / contentWidth : 1;
-      
+
       // Use the smaller scale to fit both dimensions
       const scale = Math.min(scaleX, scaleY);
 
@@ -87,7 +88,7 @@ export const PresentationModal: React.FC<PresentationModalProps> = ({
         autoScaleSlides();
       }, 100);
     });
-    
+
     deckRef.current = deck;
 
     // Re-scale on slide change in case of lazy loading
@@ -160,7 +161,7 @@ export const PresentationModal: React.FC<PresentationModalProps> = ({
               className="bn-presentation-slide"
             >
               {/* Render HTML with BlockNote classes */}
-              <div 
+              <div
                 className="bn-container bn-default-styles"
                 dangerouslySetInnerHTML={{ __html: slideElement }}
               />
