@@ -13,9 +13,13 @@
     "slideshow",
     "presentation",
     "revealjs",
+    "whiteboard",
+    "drawing",
+    "canvas",
+    "diagram",
     "react"
   ],
-  "version": "1.0.3",
+  "version": "1.0.7",
   "license": "SEE LICENSE IN LICENSE",
   "author": "Yash Gupta",
   "contributors": [
@@ -54,6 +58,10 @@
     "./spreadsheet": {
       "types": "./dist/spreadsheet/main.d.ts",
       "import": "./dist/spreadsheet/main.js"
+    },
+    "./whiteboard": {
+      "types": "./dist/whiteboard/main.d.ts",
+      "import": "./dist/whiteboard/main.js"
     }
   },
   "files": [
@@ -89,6 +97,7 @@
     "@codemirror/lang-rust": "^6.0.2",
     "@codemirror/state": "^6.5.2",
     "@codemirror/view": "^6.39.2",
+    "@excalidraw/excalidraw": "^0.18.0",
     "@handsontable/react": "^16.2.0",
     "echarts": "^6.0.0",
     "echarts-for-react": "^3.0.5",
