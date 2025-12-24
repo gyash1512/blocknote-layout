@@ -2,6 +2,10 @@ import {
     BlockNoteSchema,
     defaultBlockSpecs,
     BlockSpecs,
+    BlockNoteEditor,
+    BlockSchema,
+    InlineContentSchema,
+    StyleSchema,
 } from "@blocknote/core";
 import { SpreadsheetBlock } from "./SpreadsheetBlock.js";
 
@@ -37,7 +41,7 @@ export function withSpreadsheet<
 }
 
 export function checkSpreadsheetBlocksInSchema(
-    editor: any
+    editor: BlockNoteEditor<BlockSchema, InlineContentSchema, StyleSchema>
 ): boolean {
     return (
         "spreadsheet" in editor.schema.blockSchema

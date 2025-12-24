@@ -1,4 +1,4 @@
-import { BlockNoteEditor, BlockSchema, InlineContentSchema, StyleSchema } from "@blocknote/core";
+import { BlockNoteEditor, BlockSchema, InlineContentSchema, StyleSchema, PartialBlock } from "@blocknote/core";
 import { DefaultReactSuggestionItem } from "@blocknote/react";
 import { FaTable } from "react-icons/fa";
 
@@ -15,7 +15,7 @@ function insertSpreadsheet<
                 props: {
                     title: "Spreadsheet",
                 },
-            } as any,
+            } as PartialBlock<BSchema, ISchema, SSchema>,
         ],
         editor.getTextCursorPosition().block,
         "after"
