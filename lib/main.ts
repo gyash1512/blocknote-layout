@@ -46,12 +46,6 @@ export {
     PresentationModal,
 } from "./slideshow/main.js";
 
-// Spreadsheet exports
-export {
-    spreadsheetBlockSpecs,
-    getSpreadsheetSlashMenuItems,
-} from "./spreadsheet/main.js";
-
 // Whiteboard exports
 export {
     Whiteboard,
