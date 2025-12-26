@@ -1054,18 +1054,45 @@
   margin-bottom: 0 !important;
 }
 
-/* Force content to fit within slide bounds */
+/* Prevent scrolling - weight-based splitting ensures content fits */
 .bn-presentation-modal .reveal .slides section {
   height: 100% !important;
   overflow: hidden !important;
+  width: 100% !important;
 }
 
 .bn-presentation-modal .reveal .slides section .bn-container {
   transform-origin: top left;
   max-height: 100%;
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
 }
 
 /* Make Reveal.js use fit mode */
 .bn-presentation-modal .reveal .slide-background {
   height: 100% !important;
+}
+
+/* Nested list indentation - BlockNote uses .bn-block-group for nested content */
+.bn-presentation-modal .reveal .bn-block-group {
+  padding-left: 2em !important;
+  margin-top: 0.2em !important;
+}
+
+/* Ensure nested list items maintain proper styling */
+.bn-presentation-modal .reveal .bn-block-group .bn-block-outer [data-content-type="bulletListItem"],
+.bn-presentation-modal .reveal .bn-block-group .bn-block-outer [data-content-type="numberedListItem"],
+.bn-presentation-modal .reveal .bn-block-group .bn-block-outer ul li,
+.bn-presentation-modal .reveal .bn-block-group .bn-block-outer ol li {
+  font-size: clamp(0.65em, 1.2vw, 1em) !important;
+  margin: 0.1em 0 !important;
+}
+
+/* Reduce bullet/number size for nested items */
+.bn-presentation-modal .reveal .bn-block-group .bn-block-outer [data-content-type="bulletListItem"]::before,
+.bn-presentation-modal .reveal .bn-block-group .bn-block-outer [data-content-type="numberedListItem"]::before,
+.bn-presentation-modal .reveal .bn-block-group .bn-block-outer ul li::before,
+.bn-presentation-modal .reveal .bn-block-group .bn-block-outer ol li::before {
+  font-size: 0.9em !important;
 }
