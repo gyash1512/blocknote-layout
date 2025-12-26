@@ -1,5 +1,44 @@
 import type { BlockNoteEditor } from '@blocknote/core';
 
+// Slide content types - supports both HTML and React component data
+export interface HtmlSlide {
+  type: 'html';
+  content: string;
+}
+
+export interface WhiteboardSlide {
+  type: 'whiteboard';
+  title: string;
+  data: {
+    elements: any[];
+    appState: any;
+    files: any;
+  };
+}
+
+export type SlideContent = HtmlSlide | WhiteboardSlide;
+
+// Parse whiteboard data from string or object
+const parseWhiteboardData = (data: string | object | null): { elements: any[]; appState: any; files: any } | null => {
+  if (!data) return null;
+
+  try {
+    const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+
+    if (parsed && (parsed.elements || parsed.appState)) {
+      return {
+        elements: parsed.elements || [],
+        appState: parsed.appState || {},
+        files: parsed.files || null,
+      };
+    }
+  } catch (error) {
+    console.warn('Failed to parse whiteboard data:', error);
+  }
+
+  return null;
+};
+
 // Maximum visual weight per slide (replaces simple block count)
 const MAX_WEIGHT_PER_SLIDE = 20;
 
@@ -49,7 +88,17 @@ const extractText = (content: any[]): string => {
 
 // Check if a block is empty (has no meaningful content)
 const isEmptyBlock = (block: any): boolean => {
-  // Check text content from DOM
+  // Whiteboard blocks are never empty if they have data
+  if (block.type === 'whiteboard') {
+    return !block.props?.whiteboardData;
+  }
+
+  // Spreadsheet and other custom blocks are not empty
+  if (block.type === 'spreadsheet' || block.type === 'mermaid') {
+    return false;
+  }
+
+  // Check text content from DOM for regular blocks
   const text = block._domElement?.textContent?.trim() || '';
   return text === '';
 };
@@ -235,13 +284,17 @@ const splitLongSection = (blocks: any[]): any[][] => {
 /**
  * Generate slides HTML from BlockNote editor using pure DOM traversal.
  * This preserves all custom blocks and nested structures.
+ * Returns a Promise that resolves to an array of SlideContent (HTML or Whiteboard).
  */
-export const generateSlidesFromBlocks = (editor: BlockNoteEditor<any, any, any>): string[] => {
+export const generateSlidesFromBlocks = async (editor: BlockNoteEditor<any, any, any>): Promise<SlideContent[]> => {
   const tiptapEditor = (editor as any)._tiptapEditor;
   if (!tiptapEditor) {
     console.error('Could not access tiptap editor');
-    return ['<p>Error: Could not access editor</p>'];
+    return [{ type: 'html', content: '<p>Error: Could not access editor</p>' }];
   }
+
+  // Get the ProseMirror document for accessing node attributes (needed for whiteboard data)
+  const pmDoc = tiptapEditor.state.doc;
 
   // Use pure DOM - no ProseMirror mapping needed!
   const editorContainer = tiptapEditor.view.dom;
@@ -262,17 +315,55 @@ export const generateSlidesFromBlocks = (editor: BlockNoteEditor<any, any, any>)
     return blockGroupCount === 1;
   });
 
-  console.log('=== DOM-based Collection ===');
-  console.log('Total .bn-block-outer elements:', allBlockElements.length);
-  console.log('Top-level blocks:', topLevelBlockElements.length);
+
+
+  // Collect all whiteboard nodes from ProseMirror document first
+  // This ensures we can match them in order with DOM elements
+  const whiteboardNodes: Array<{ data: string | object | null; title: string }> = [];
+  pmDoc.descendants((node: any) => {
+    if (node.type.name === 'whiteboard') {
+      whiteboardNodes.push({
+        data: node.attrs.data,
+        title: node.attrs.title || 'Whiteboard',
+      });
+    }
+    return true;
+  });
+  let whiteboardIndex = 0;
 
   // Extract block data directly from DOM
   const docContent: any[] = [];
 
   topLevelBlockElements.forEach((domElement) => {
     // Get block type from data attribute or element structure
-    const blockContent = domElement.querySelector('[data-content-type]');
-    const type = blockContent?.getAttribute('data-content-type') || 'paragraph';
+    // Check both child elements and the element itself (for custom blocks like whiteboard)
+    let blockContent = domElement.querySelector('[data-content-type]');
+    let type = blockContent?.getAttribute('data-content-type') || 'paragraph';
+
+    // Special handling for collapsed custom blocks - check wrapper classes
+    // This handles cases where the content-type is on a wrapper that might not be the direct child
+    if (!blockContent || type === 'paragraph') {
+      // Check for whiteboard wrapper (handles collapsed state)
+      const whiteboardWrapper = domElement.querySelector('.whiteboard-wrapper, .blocknote-whiteboard');
+      if (whiteboardWrapper) {
+        type = 'whiteboard';
+        blockContent = whiteboardWrapper;
+      }
+
+      // Check for spreadsheet wrapper
+      const spreadsheetWrapper = domElement.querySelector('.spreadsheet-wrapper, .blocknote-spreadsheet');
+      if (spreadsheetWrapper) {
+        type = 'spreadsheet';
+        blockContent = spreadsheetWrapper;
+      }
+
+      // Check for mermaid wrapper
+      const mermaidWrapper = domElement.querySelector('.mermaid-wrapper, .blocknote-mermaid');
+      if (mermaidWrapper) {
+        type = 'mermaid';
+        blockContent = mermaidWrapper;
+      }
+    }
 
     // Extract additional props based on block type
     const props: any = {};
@@ -294,6 +385,21 @@ export const generateSlidesFromBlocks = (editor: BlockNoteEditor<any, any, any>)
       }
     }
 
+
+    // For whiteboard blocks, extract the data from the pre-collected nodes
+    if (type === 'whiteboard') {
+      // Get the corresponding whiteboard node data (in order)
+      if (whiteboardIndex < whiteboardNodes.length) {
+        const whiteboardNode = whiteboardNodes[whiteboardIndex];
+        const parsed = parseWhiteboardData(whiteboardNode.data);
+        if (parsed) {
+          props.whiteboardData = parsed;
+          props.whiteboardTitle = whiteboardNode.title;
+        }
+        whiteboardIndex++;
+      }
+    }
+
     const blockData: any = {
       type: type,
       props: props,
@@ -306,10 +412,6 @@ export const generateSlidesFromBlocks = (editor: BlockNoteEditor<any, any, any>)
   // Filter out slideshow blocks
   let allBlocks = docContent.filter((b: any) => b.type !== 'slideshow');
 
-  console.log('=== Slide Generation Debug ===');
-  console.log('Total blocks collected:', docContent.length);
-  console.log('After filtering slideshows:', allBlocks.length);
-  console.log('Block types:', allBlocks.map(b => b.type).join(', '));
 
   // Skip leading empty blocks to prevent blank first slide
   let firstNonEmptyIndex = 0;
@@ -319,7 +421,7 @@ export const generateSlidesFromBlocks = (editor: BlockNoteEditor<any, any, any>)
   allBlocks = allBlocks.slice(firstNonEmptyIndex);
 
   if (allBlocks.length === 0) {
-    return ['<p>Empty Canvas</p>'];
+    return [{ type: 'html', content: '<p>Empty Canvas</p>' }];
   }
 
   // Apply splitting logic
@@ -350,19 +452,31 @@ export const generateSlidesFromBlocks = (editor: BlockNoteEditor<any, any, any>)
   }
 
   if (finalSlides.length === 0) {
-    return ['<p>Empty Canvas</p>'];
+    return [{ type: 'html', content: '<p>Empty Canvas</p>' }];
   }
 
-  console.log('Final slides count:', finalSlides.length);
-  console.log('Blocks per slide:', finalSlides.map(s => s.length).join(', '));
-  console.log('=== End Debug ===');
 
-  // Build slides by cloning DOM elements directly
-  const htmlSlides = finalSlides.map((slideBlocks) => {
+
+  // Build slides - return SlideContent[] (HTML or Whiteboard)
+  const slides: SlideContent[] = finalSlides.map((slideBlocks) => {
+    // Check if this is a whiteboard-only slide
+    if (slideBlocks.length === 1 && slideBlocks[0].type === 'whiteboard' && slideBlocks[0].props?.whiteboardData) {
+      const block = slideBlocks[0];
+      return {
+        type: 'whiteboard' as const,
+        title: block.props.whiteboardTitle || 'Whiteboard',
+        data: block.props.whiteboardData,
+      };
+    }
+
+    // Otherwise, build HTML slide
     const slideDiv = document.createElement('div');
     slideDiv.className = 'bn-slide-content';
 
     for (const block of slideBlocks) {
+      // Skip whiteboards in mixed slides (they get their own slide above)
+      if (block.type === 'whiteboard') continue;
+
       const domElement = block._domElement;
 
       if (domElement) {
@@ -378,8 +492,11 @@ export const generateSlidesFromBlocks = (editor: BlockNoteEditor<any, any, any>)
       }
     }
 
-    return slideDiv.innerHTML || '<p>Empty slide</p>';
+    return {
+      type: 'html' as const,
+      content: slideDiv.innerHTML || '<p>Empty slide</p>',
+    };
   });
 
-  return htmlSlides;
+  return slides;
 };

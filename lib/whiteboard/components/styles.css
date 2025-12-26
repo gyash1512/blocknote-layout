@@ -66,6 +66,8 @@
 
 .whiteboard-title-input {
     flex: 1;
+    min-width: 0;
+    /* Allow shrinking on small screens */
     font-size: 15px;
     font-weight: 600;
     border: none;
@@ -74,6 +76,8 @@
     color: var(--wb-text-main);
     padding: 4px 0;
     letter-spacing: -0.01em;
+    text-overflow: ellipsis;
+    /* Add ellipsis for long titles */
 }
 
 .whiteboard-title-input::placeholder {
@@ -277,6 +281,11 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+    .whiteboard-toolbar {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+
     .whiteboard-modal-breadcrumbs {
         display: none;
     }

@@ -5,9 +5,11 @@ import "reveal.js/dist/reveal.css";
 import "../styles/slideshow.css";
 import "@blocknote/mantine/style.css";
 import { MdClose } from "react-icons/md";
+import { SlideContent } from "../utils/generateSlidesFromEditor.js";
+import { WhiteboardSlide } from "./WhiteboardSlide.js";
 
 interface PresentationModalProps {
-  slides: string[];
+  slides: SlideContent[];
   onClose: () => void;
   theme?: string;
 }
@@ -159,6 +161,37 @@ export const PresentationModal: React.FC<PresentationModalProps> = ({
     };
   }, [onClose]);
 
+  // Render a slide based on its type
+  const renderSlide = (slide: SlideContent, index: number) => {
+    if (slide.type === 'whiteboard') {
+      return (
+        <section
+          key={index}
+          className="bn-presentation-slide bn-whiteboard-presentation-slide"
+        >
+          <WhiteboardSlide
+            data={slide.data}
+            title={slide.title}
+            theme={theme}
+          />
+        </section>
+      );
+    }
+
+    // HTML slide
+    return (
+      <section
+        key={index}
+        className="bn-presentation-slide"
+      >
+        <div
+          className="bn-container bn-default-styles"
+          dangerouslySetInnerHTML={{ __html: slide.content }}
+        />
+      </section>
+    );
+  };
+
   return createPortal(
     <div className="bn-presentation-modal" data-id="presentation-modal" data-theme={theme}>
       {/* Close button */}
@@ -173,21 +206,11 @@ export const PresentationModal: React.FC<PresentationModalProps> = ({
       {/* Reveal.js container */}
       <div ref={revealRef} className={`reveal theme-${theme}`}>
         <div className="slides">
-          {slides.map((slideElement, index) => (
-            <section
-              key={index}
-              className="bn-presentation-slide"
-            >
-              {/* Render HTML with BlockNote classes */}
-              <div
-                className="bn-container bn-default-styles"
-                dangerouslySetInnerHTML={{ __html: slideElement }}
-              />
-            </section>
-          ))}
+          {slides.map((slide, index) => renderSlide(slide, index))}
         </div>
       </div>
     </div>,
     document.body
   );
 };
+
