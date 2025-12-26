@@ -12,10 +12,11 @@ export const WhiteboardNodeView = (props: NodeViewProps) => {
     const { node, updateAttributes } = props;
     const [titleValue, setTitleValue] = useState(node.attrs.title || 'Untitled Whiteboard');
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(true);
     const [fontsLoaded, setFontsLoaded] = useState(false);
+    const [previewKey, setPreviewKey] = useState(0);
     const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
     const isInitialLoadRef = useRef(true);
-    const componentKeyRef = useRef(Math.random().toString(36));
 
     // Detect if mobile
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
@@ -202,7 +203,11 @@ export const WhiteboardNodeView = (props: NodeViewProps) => {
         return createPortal(
             <div className="whiteboard-modal-overlay">
                 <div className="whiteboard-modal-header">
-                    <button className="whiteboard-modal-close" onClick={() => setIsExpanded(false)}>
+                    <button className="whiteboard-modal-close" onClick={() => {
+                        setIsExpanded(false);
+                        // Force preview to re-render with updated data
+                        setPreviewKey(prev => prev + 1);
+                    }}>
                         <MdClose size={20} />
                         <span>Close</span>
                     </button>
@@ -277,42 +282,46 @@ export const WhiteboardNodeView = (props: NodeViewProps) => {
 
     return (
         <NodeViewWrapper>
-            <div className="whiteboard-wrapper blocknote-whiteboard" data-content-type="whiteboard">
+            <div className={`whiteboard-wrapper blocknote-whiteboard ${isCollapsed ? 'whiteboard-collapsed' : ''}`} data-content-type="whiteboard">
                 <WhiteboardToolbar
                     title={titleValue}
                     setTitle={setTitleValue}
                     onTitleBlur={handleTitleBlur}
                     onExpand={() => setIsExpanded(true)}
+                    isCollapsed={isCollapsed}
+                    onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
                 />
 
-                <div className="whiteboard-preview-container" onClick={() => setIsExpanded(true)}>
-                    <div className="whiteboard-preview-placeholder">
-                        {fontsLoaded && (
-                            <Excalidraw
-                                key={componentKeyRef.current}
-                                initialData={initialData || undefined}
-                                viewModeEnabled={true}
-                                zenModeEnabled={true}
-                                gridModeEnabled={false}
-                                renderTopRightUI={() => null}
-                                UIOptions={{
-                                    canvasActions: {
-                                        clearCanvas: false,
-                                        saveAsImage: false,
-                                        loadScene: false,
-                                        saveToActiveFile: false,
-                                        export: false,
-                                        toggleTheme: false,
-                                        changeViewBackgroundColor: false,
-                                    }
-                                }}
-                            />
-                        )}
-                        <div className="whiteboard-preview-overlay">
-                            <span>Continue Drawing</span>
+                {!isCollapsed && (
+                    <div className="whiteboard-preview-container" onClick={() => setIsExpanded(true)}>
+                        <div className="whiteboard-preview-placeholder">
+                            {fontsLoaded && (
+                                <Excalidraw
+                                    key={`preview-${previewKey}`}
+                                    initialData={initialData || undefined}
+                                    viewModeEnabled={true}
+                                    zenModeEnabled={true}
+                                    gridModeEnabled={false}
+                                    renderTopRightUI={() => null}
+                                    UIOptions={{
+                                        canvasActions: {
+                                            clearCanvas: false,
+                                            saveAsImage: false,
+                                            loadScene: false,
+                                            saveToActiveFile: false,
+                                            export: false,
+                                            toggleTheme: false,
+                                            changeViewBackgroundColor: false,
+                                        }
+                                    }}
+                                />
+                            )}
+                            <div className="whiteboard-preview-overlay">
+                                <span>Continue Drawing</span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
 
                 {renderFullEditor()}
             </div>
