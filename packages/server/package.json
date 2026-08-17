@@ -43,10 +43,10 @@
     "blocknote-layout-mentions": "workspace:^"
   },
   "peerDependencies": {
-    "@blocknote/core": "0.51.4"
+    "@blocknote/core": "0.54.0"
   },
   "devDependencies": {
     "typescript": "^5.2.2",
-    "@blocknote/core": "0.51.4"
+    "@blocknote/core": "0.54.0"
   }
 }
